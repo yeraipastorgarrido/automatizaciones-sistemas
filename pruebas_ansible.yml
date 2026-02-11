@@ -1,0 +1,24 @@
+- name: Pruebas_ansible #Nombre del playbook
+  hosts: Pruebas_Yerai #A quien tiramos el playbook
+  become: true #Permisos de root Especificar al final de comando --ask-become-pass (para que pregunte la contraseña)
+  
+  tasks:
+    - name: ver_usuarios #Nombre de la tarea
+      ansible.builtin.command: df -h # Comando que queremos ejecutar
+      register: registro_passwd #Variable donde se guarda la salida de la tarea
+    
+    - name: ver_variable
+      ansible.builtin.debug: #Mostrar mensajes por terminal
+        msg: "{{ registro_passwd.stdout_lines }}" #Mensaje Con el .stdout mostramos el campo dentro de mesage en el que viene la salida
+
+    - name: crear_informe
+      ansible.builtin.shell: echo Hola > /home/yerai/informe.txt
+
+    - name: guardar_info
+      ansible.builtin.shell: df -h > /home/yerai/informe.txt
+
+    - name: pasar_info
+      ansible.builtin.fetch: 
+        src: /home/yerai/informe.txt
+        dest: /etc/ansible/playbooks/testing/informe.txt
+        flat: yes
