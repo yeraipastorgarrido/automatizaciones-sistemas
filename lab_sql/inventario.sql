@@ -1,17 +1,29 @@
--- Tabla para los equipos que mantenías en SAI Computers o Coneptum
+CREATE DATABASE IF NOT EXISTS gestion_it;
+USE gestion_it;
+
+DROP TABLE IF EXISTS equipos;
+
 CREATE TABLE equipos (
-    id_equipo SERIAL PRIMARY KEY,
+    id_equipo INT AUTO_INCREMENT PRIMARY KEY,
     nombre_equipo VARCHAR(50) NOT NULL,
-    tipo VARCHAR(20), -- Portátil, Servidor, Workstation
-    estado VARCHAR(20) DEFAULT 'OPERATIVO', -- OPERATIVO, MANTENIMIENTO, BAJA
+    tipo VARCHAR(20),
+    estado VARCHAR(20) DEFAULT 'OPERATIVO',
     fecha_alta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Metemos un par de equipos de prueba
+INSERT INTO equipos (nombre_equipo, tipo) VALUES ('SRV-BRUC-01', 'Servidor');
+INSERT INTO equipos (nombre_equipo, tipo) VALUES ('PC-YERAI-PRO', 'Workstation');
+CREATE TABLE equipos (
+    id_equipo SERIAL PRIMARY KEY,
+    nombre_equipo VARCHAR(50) NOT NULL,
+    tipo VARCHAR(20), 
+    estado VARCHAR(20) DEFAULT 'OPERATIVO', 
+    fecha_alta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO equipos (nombre_equipo, tipo) VALUES ('SRV-BRUC-01', 'Servidor');
 INSERT INTO equipos (nombre_equipo, tipo) VALUES ('PC-YERAI-PRO', 'Workstation');
 
--- Función para mandar a reparar un equipo
 CREATE OR REPLACE FUNCTION enviar_a_mantenimiento(p_id INTEGER) 
 RETURNS TEXT AS $$
 BEGIN
