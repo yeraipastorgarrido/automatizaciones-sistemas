@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  db-postgres:
+    image: postgres:latest
+    container_name: postgres_asir_lab
+    environment:
+      POSTGRES_USER: yerai
+      POSTGRES_PASSWORD: yerai2025!
+      POSTGRES_DB: gestion_it
+    ports:
+      - "5432:5432"
