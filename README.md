@@ -3,3 +3,4 @@ Este repositorio contiene mis scripts y pruebas de automatización desarrollados
 
 ## Contenido
 * **pruebas_ansible.yml**: Playbook de prueba para ejecución de comandos remotos, gestión de archivos y transferencia de informes (fetch).
+* **get_ready.sh**: Script para automatizar la instalación de elementos basicos en Ubuntu.
