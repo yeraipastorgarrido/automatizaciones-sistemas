@@ -1,11 +1,12 @@
-# Automatización de Sistemas
+# Automatización de Sistemas - Yerai Pastor
 
-Este repositorio contiene mis scripts y pruebas de automatización desarrollados durante mi formación en **ASIR** y mis prácticas en **Coneptum S.L.**
+Repositorio centralizado de laboratorios de automatización y administración de sistemas.
 
-## Proyectos y Laboratorios
+## Laboratorios Disponibles
 
-| Proyecto | Descripción Breve | Enlace |
-| :--- | :--- | :--- |
-| **Lab SQL** | Despliegue de inventario IT con Docker, MySQL y lógica de triggers. | [Ver más](./lab_sql/) |
-| **Ansible Labs** | Pruebas de playbooks para gestión remota y transferencia de archivos. | [Ver más](./ansible_labs/) |
-| **Scripts Ubuntu** | Automatización de la configuración post-instalación de sistemas. | [Ver más](./scripts_ubuntu/) |
+* **[Ansible Lab](./ansible_lab/)**: Gestión de configuraciones y automatización de tareas remotas.
+* **[Scripts Ubuntu Lab](./scripts_ubuntu_lab/)**: Herramientas de aprovisionamiento rápido para sistemas Debian-based.
+* **[SQL Lab](./sql_lab/)**: Despliegue automatizado de infraestructura MySQL mediante contenedores Docker.
+
+## Estándares del Repositorio
+Cada laboratorio cuenta con su propia documentación específica, scripts de despliegue y herramientas de limpieza.
