@@ -3,7 +3,6 @@
 ## Medidas Implementadas
 * **Firewall (UFW)**
 * **SSH Hardening**
-* **Mantenimiento** `apt upgrade`.
 
 ## Instrucciones
 Para aplicar las políticas de seguridad:
