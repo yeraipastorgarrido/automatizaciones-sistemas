@@ -1,16 +1,11 @@
 # Automatización de Sistemas
+
 Este repositorio contiene mis scripts y pruebas de automatización desarrollados durante mi formación en **ASIR** y mis prácticas en **Coneptum S.L.**
 
-## Contenido
-* **pruebas_ansible.yml**: Playbook de prueba para ejecución de comandos remotos, gestión de archivos y transferencia de informes (fetch).
-* **get_ready.sh**: Script para automatizar la instalación de elementos basicos en Ubuntu.
+## Proyectos y Laboratorios
 
-
-
-# Automatizaciones de Sistemas - Yerai Pastor
-
-Repositorio dedicado a la automatización de tareas de administración de sistemas, despliegue de infraestructura y gestión de bases de datos.
-
-## Laboratorios Disponibles
-* **[Laboratorio SQL (Docker + MySQL)](./lab_sql/):** Automatización del despliegue de un inventario IT con lógica de triggers y persistencia de datos.
-* **[Backup Automatizado (Bash)](./lab_sql/backup_db.sh):** Scripting para copias de seguridad programadas.
+| Proyecto | Descripción Breve | Enlace |
+| :--- | :--- | :--- |
+| **Lab SQL** | Despliegue de inventario IT con Docker, MySQL y lógica de triggers. | [Ver más](./lab_sql/) |
+| **Ansible Labs** | Pruebas de playbooks para gestión remota y transferencia de archivos. | [Ver más](./ansible_labs/) |
+| **Scripts Ubuntu** | Automatización de la configuración post-instalación de sistemas. | [Ver más](./scripts_ubuntu/) |
