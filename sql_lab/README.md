@@ -29,4 +29,4 @@ chmod +x levantar_docker.sh
 ./levantar_docker.sh
 chmod +x reset_entorno.sh
 ./reset_entorno.sh
-```bash
+```
