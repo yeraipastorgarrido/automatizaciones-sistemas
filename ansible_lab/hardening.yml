@@ -1,0 +1,16 @@
+---
+- name: Hardening del Servidor VMware
+  hosts: servidores_it
+  become: yes  # Esto es como poner "sudo" a todas las tareas
+
+  tasks:
+    - name: Asegurar que el firewall UFW esté instalado
+      apt:
+        name: ufw
+        state: present
+
+    - name: Permitir solo el puerto SSH por ahora
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp

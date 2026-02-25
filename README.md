@@ -1,12 +1,19 @@
-# Automatización de Sistemas - Yerai Pastor
+# Laboratorio de Automatización: Terraform + VMware + Ansible
 
-Repositorio centralizado de laboratorios de automatización y administración de sistemas.
+Este proyecto automatiza el despliegue de infraestructura en un entorno **VMware vSphere** y la configuración post-despliegue mediante **Ansible**.
 
-## Laboratorios Disponibles
+## 🚀 Componentes
+- **Terraform**: Orquestación de la infraestructura en el Datacenter `Inmatic`.
+- **VMware vCenter**: Gestión del clúster `Clúster ESXI's Inmatic`.
+- **Ansible**: Configuración automática de la VM (Docker, herramientas y alias).
+- **Docker**: Despliegue de un contenedor Nginx local como prueba de concepto.
 
-* **[Ansible Lab](./ansible_lab/)**: Gestión de configuraciones y automatización de tareas remotas.
-* **[Scripts Ubuntu Lab](./scripts_ubuntu_lab/)**: Herramientas de aprovisionamiento rápido para sistemas Debian-based.
-* **[SQL Lab](./sql_lab/)**: Despliegue automatizado de infraestructura MySQL mediante contenedores Docker.
+## 🛠️ Requisitos
+- Acceso al vCenter en la IP `192.168.68.81`.
+- Plantilla de VM denominada `PlantillaDev`.
+- Instalar `sshpass` y `ansible` en la máquina local.
 
-## Estándares del Repositorio
-Cada laboratorio cuenta con su propia documentación específica, scripts de despliegue y herramientas de limpieza.
+## 📈 Flujo de Trabajo
+1. `terraform apply` clona la plantilla y enciende la VM.
+2. Terraform captura la IP asignada (ej: `192.168.68.74`).
+3. Se ejecuta automáticamente el script `get_ready.sh` vía Ansible.

@@ -22,7 +22,11 @@ echo -e "${VERDE}4. Limpiando archivos innecesarios...${NC}"
 sudo apt autoremove -y
 
 echo -e "${VERDE}5. Configurando alias basicos...${NC}"
-echo "alias archivos_permisos='ls -la'" >> ~/.bashrc
-echo "alias estado_disco='df -h'" >> ~/.bashrc
+# Cambia las líneas del script por estas:
+echo "alias archivos_permisos='ls -la'" >>  $HOME/.bashrc
+echo "alias estado_disco='df -h'" >> $HOME/.bashrc
+
+echo -e "${VERDE}6. Reseteando el entorno gráfico...${NC}"
+sudo systemctl restart gdm3
 
 echo -e "${VERDE}¡Listo! Máquina preparada. Reinicia la sesión para aplicar los alias.${NC}"

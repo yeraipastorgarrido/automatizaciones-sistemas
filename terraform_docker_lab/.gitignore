@@ -1,0 +1,12 @@
+# Claves
+secretos.tfvars
+
+# Archivos de estado de Terraform
+*.tfstate
+*.tfstate.backup
+
+# Carpeta de plugins de Terraform
+.terraform/
+
+# Archivos temporales de variables
+*.tfvars.json
