@@ -1,11 +1,15 @@
-# Laboratorio de Ansible
+# Ansible Lab: Gestión de Configuración y Estados
 
-Este módulo se enfoca en la gestión de configuraciones y la orquestación de tareas en servidores remotos mediante playbooks de Ansible.
+Este directorio contiene los playbooks y archivos de configuración necesarios para automatizar el estado deseado de las máquinas virtuales y servidores locales.
 
-## Contenido Técnico
-* **pruebas_ansible.yml**: Playbook diseñado para la ejecución de comandos remotos y la gestión de estados en nodos externos.
+## 📋 Contenido del Módulo
 
-## Funcionalidades Implementadas
-* **Gestión de archivos**: Automatización de la transferencia y sincronización de ficheros.
-* **Módulo Fetch**: Extracción de informes y logs desde los nodos remotos hacia la máquina de control para su posterior análisis.
-* **Idempotencia**: Garantía de que el estado del sistema final es el deseado independientemente de las ejecuciones previas.
+* **`get_vmware_ready.yml`**: Playbook principal de post-despliegue. Actúa como orquestador para ejecutar scripts de inicialización en máquinas recién creadas por Terraform.
+* **`hardening.yml`**: Playbook dedicado a la seguridad del sistema operativo, aplicando políticas de cierre de puertos y configuraciones seguras de SSH.
+* **`hosts.ini`**: Inventario de nodos gestionados, organizado por grupos (ej. servidores web, bases de datos).
+* **`pruebas_ansible.yml`**: Entorno de testing para validar conectividad y nuevos módulos antes de pasarlos a producción.
+
+## ⚙️ Uso
+Para ejecutar la configuración de una VM específica tras su despliegue:
+```bash
+ansible-playbook -i 'IP_DE_LA_VM,' -u yerai -e 'ansible_password=TU_PASSWORD' get_vmware_ready.yml

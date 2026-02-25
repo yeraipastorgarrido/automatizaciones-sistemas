@@ -1,19 +1,22 @@
-# Laboratorio: Inventario IT Automatizado (Docker + MySQL)
+# SQL Lab: Gestión de Bases de Datos Contenerizadas
 
-Este laboratorio automatiza la creación de un entorno de base de datos para gestión de activos informáticos.
+Este módulo está dedicado al despliegue y administración de sistemas de bases de datos relacionales (MariaDB/MySQL) dentro del ecosistema de **Inmatic**. El objetivo es garantizar un entorno de datos consistente, persistente y fácil de resetear para pruebas de desarrollo.
 
-## Características Técnicas
-* **Infraestructura**: Despliegue mediante Docker y Docker Compose.
-* **Base de Datos**: Motor MySQL con triggers de seguridad para evitar el borrado de equipos en estado 'OPERATIVO'.
-* **Automatización**: Scripts de Bash interactivos para limpieza (`reset_entorno.sh`) y despliegue (`levantar_docker.sh`).
+## 🚀 Componentes del Módulo
 
-## Resolución de Desafíos (Troubleshooting)
-Durante el desarrollo se solventaron problemas críticos de administración:
-1. **Compatibilidad**: Migración de dependencias de Python/distutils hacia Docker Compose Plugin oficial.
-2. **Idempotencia**: Implementación de lógica `DROP TABLE IF EXISTS` para evitar el error 1050 de tablas duplicadas.
-3. **Seguridad silenciosa**: Uso de variables de entorno para evitar avisos de contraseñas en texto plano en la terminal.
+He estructurado esta carpeta para que el despliegue de la base de datos sea lo más automatizado posible:
 
-## Uso
-Ejecutar el script principal y seguir las instrucciones en pantalla:
-```bash
-./levantar_docker.sh
+* **`docker-compose.yml`**: Define la infraestructura de la base de datos, incluyendo la configuración de variables de entorno, mapeo de puertos (3306) y la persistencia mediante volúmenes.
+* **`inventario.sql`**: Script de inicialización que contiene la estructura de tablas y los datos de prueba iniciales; se carga automáticamente al levantar el servicio por primera vez.
+* **`levantar_docker.sh`**: Script de automatización que simplifica el arranque del stack, validando el estado del motor Docker antes de lanzar el despliegue.
+* **`reset_entorno.sh`**: Herramienta de utilidad para limpiar el entorno de pruebas, eliminando contenedores y volúmenes para permitir un despliegue desde cero.
+
+[Image of a Docker Compose architecture diagram for a database with persistent storage volumes]
+
+## 🛠️ Integración con el Laboratorio
+
+Este módulo está diseñado para ejecutarse sobre la infraestructura orquestada previamente en el clúster de vSphere:
+
+1. **Infraestructura**: Terraform crea la VM en el datastore de Inmatic, aprovechando los **6,97 TB** de espacio disponible para asegurar la cuota de los volúmenes de datos.
+2. **Preparación**: El script de post-despliegue `get_ready.sh` instala el motor de Docker necesario para gestionar estos servicios.
+3. **Despliegue de Datos**: Una vez la instancia es operativa y cuenta con IP asignada (ej. `192
