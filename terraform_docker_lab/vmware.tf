@@ -19,11 +19,11 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "PlantillaDev"
+  name          = "PlantillaGitRunner"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-# --- RESOURCES (CREACIÓN) ---
+# CREACIÓN
 resource "vsphere_virtual_machine" "vm_automatizada" {
   name             = "VM-Terraform-Yerai"
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
@@ -47,15 +47,13 @@ resource "vsphere_virtual_machine" "vm_automatizada" {
 
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
+    linked_clone = true
   }
-
-  # --- EL BLOQUE VA AQUÍ (DENTRO DEL RESOURCE) ---
 
   # Espera a que la VM arranque y reporte su IP al vCenter
   wait_for_guest_ip_timeout = 2 
 
   provisioner "local-exec" {
-    # Usamos tus variables de secretos y el nombre correcto del playbook
     command = "export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook -i '${self.default_ip_address},' -u ${var.vm_user} -e 'ansible_password=${var.vm_password} ansible_become_password=${var.vm_password}' ../ansible_lab/get_vmware_ready.yml"
   }
-} # <-- Esta es la llave que cierra el resource
+}

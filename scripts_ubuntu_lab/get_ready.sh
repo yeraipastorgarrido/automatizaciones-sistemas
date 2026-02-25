@@ -8,7 +8,7 @@ VERDE='\033[0;32m'
 NC='\033[0m'
 
 echo -e "${VERDE}1. Actualizando el sistema${NC}"
-sudo apt update && sudo apt upgrade -y
+#sudo apt update && sudo apt upgrade -y
 
 echo -e "${VERDE}2. Instalando herramientas básicas${NC}"
 sudo apt install -y git vim curl wget net-tools traceroute build-essential
