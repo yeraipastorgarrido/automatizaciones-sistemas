@@ -1,7 +1,143 @@
-- name: Automatización Post-Despliegue
+---
+- name: Automatización Post-Despliegue Completa
   hosts: all
   become: yes
   tasks:
-    - name: Ejecutar el script get_ready.sh
-      # Ansible buscará el script relativo a la ubicación del PLAYBOOK
+    - name: 1. Asegurar que el Firewall esté desactivado
+      command: ufw disable
+    - name: 1.5. Descargar Node Exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-amd64.tar.gz
+        dest: /tmp/node_exporter.tar.gz
+
+    - name: 1.6. Instalar Node Exporter
+      unarchive:
+        src: /tmp/node_exporter.tar.gz
+        dest: /usr/local/bin
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: 1.7. Crear servicio de sistema para Node Exporter
+      copy:
+        dest: /etc/systemd/system/node_exporter.service
+        content: |
+          [Unit]
+          Description=Node Exporter
+          After=network.target
+
+          [Service]
+          User=root
+          ExecStart=/usr/local/bin/node_exporter --web.listen-address="0.0.0.0:9100"
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: 1.8. Iniciar y habilitar Node Exporter
+      systemd:
+        name: node_exporter
+        state: started
+        enabled: yes
+
+    - name: 2. Ejecutar el script de preparación inicial
       ansible.builtin.script: ../scripts_ubuntu_lab/get_ready.sh
+
+    - name: 3. Instalar Nginx (Módulo nativo)
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: 4. Instalar dependencias de Python para Docker
+      apt:
+        name: python3-docker
+        state: present
+
+    # --- SECCIÓN BALANCEADOR ---
+    - name: 5. Configurar como Balanceador de Carga
+      template:
+        src: nginx_lb.conf.j2
+        dest: /etc/nginx/sites-available/default
+      when: worker_ips is defined
+      notify: Reiniciar Nginx
+
+    - name: 6. Crear directorio de Prometheus
+      file:
+        path: /home/inmatic/prometheus
+        state: directory
+        owner: inmatic
+        group: inmatic
+        mode: '0755'
+      when: worker_ips is defined
+
+    - name: 7. Generar archivo de targets dinámicos (Service Discovery)
+      copy:
+        dest: /home/inmatic/prometheus/targets.json
+        content: |
+          [
+            {
+              "targets": [
+                "127.0.0.1:9100",
+                {% for ip in worker_ips.split(',') %}
+                "{{ ip }}:9100"{{ "," if not loop.last else "" }}
+                {% endfor %}
+              ],
+              "labels": { "env": "produccion-yerai" }
+            }
+          ]
+      when: worker_ips is defined
+
+    - name: 8. Generar archivo de configuración de Prometheus (Static Config)
+      copy:
+        dest: /home/inmatic/prometheus/prometheus.yml
+        content: |
+          global:
+            scrape_interval: 5s
+          scrape_configs:
+            - job_name: 'vcenter-lab'
+              file_sd_configs:
+                - files:
+                  - '/etc/prometheus/targets.json'
+      when: worker_ips is defined
+
+    # --- SECCIÓN DOCKER (Solo para el Balanceador) ---
+    - name: 9. Crear red de Docker para monitorización
+      docker_network:
+        name: monitoring
+      when: worker_ips is defined
+
+    - name: 10. Levantar contenedor de Prometheus
+      docker_container:
+        name: prometheus
+        image: prom/prometheus
+        network_mode: host  # <-- ESTO ES LO IMPORTANTE
+        volumes:
+          - "/home/inmatic/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+          - "/home/inmatic/prometheus/targets.json:/etc/prometheus/targets.json"
+        restart_policy: always
+      when: worker_ips is defined
+
+    - name: 11. Levantar Grafana (Network Host)
+      docker_container:
+        name: grafana
+        image: grafana/grafana
+        network_mode: host   # <--- Solo esto
+        state: started
+        recreate: yes        # <--- Fuerza a Ansible a borrarlo y crearlo de nuevo
+        volumes:
+          - "grafana_data:/var/lib/grafana"
+        restart_policy: always
+      when: worker_ips is defined
+
+    # --- SECCIÓN WORKERS ---
+    - name: 12. Configurar como Worker (Index con hostname real)
+      copy:
+        content: "<h1>Backend: {{ ansible_hostname }}</h1>"
+        dest: /var/www/html/index.html
+      when: worker_ips is not defined
+      notify: Reiniciar Nginx
+
+  handlers:
+    - name: Reiniciar Nginx
+      service:
+        name: nginx
+        state: restarted

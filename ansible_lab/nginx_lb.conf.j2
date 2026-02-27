@@ -1,0 +1,14 @@
+upstream backend_nodes {
+{% for ip in worker_ips.split(',') %}
+    server {{ ip }};
+{% endfor %}
+}
+
+server {
+    listen 80;
+    location / {
+        proxy_pass http://backend_nodes;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}

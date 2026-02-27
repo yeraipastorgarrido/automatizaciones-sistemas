@@ -1,0 +1,35 @@
+- name: Configurar Balanceador de Carga Nginx
+  hosts: all
+  become: yes
+  tasks:
+    - name: Actualizar caché de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Crear configuración de balanceo
+      copy:
+        dest: /etc/nginx/sites-available/default
+        content: |
+          upstream myapp {
+              server {{ web_node_1 }};
+              server {{ web_node_2 }};
+          }
+
+          server {
+              listen 80;
+              location / {
+                  proxy_pass http://myapp;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+              }
+          }
+
+    - name: Reiniciar Nginx para aplicar cambios
+      service:
+        name: nginx
+        state: restarted
